@@ -1,0 +1,1114 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Craft Agency</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        outfit: ['Outfit', 'sans-serif'],
+        dm: ['DM Sans', 'sans-serif']
+      }
+    }
+  }
+}
+</script>
+  <style>
+html, body { height: 100%; margin: 0; }
+* { box-sizing: border-box; }
+
+.app-wrapper {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(99,255,182,0.3); }
+  50% { box-shadow: 0 0 40px rgba(99,255,182,0.6); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes spin-loader { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.animate-on-scroll { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
+.animate-on-scroll.delay-1 { transition-delay: 0.1s; }
+.animate-on-scroll.delay-2 { transition-delay: 0.2s; }
+.animate-on-scroll.delay-3 { transition-delay: 0.3s; }
+.animate-on-scroll.delay-4 { transition-delay: 0.4s; }
+
+.hero-animate { animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) forwards; opacity: 0; }
+.hero-delay-1 { animation-delay: 0.2s; }
+.hero-delay-2 { animation-delay: 0.4s; }
+.hero-delay-3 { animation-delay: 0.6s; }
+.hero-delay-4 { animation-delay: 0.8s; }
+
+.cta-btn {
+  background: linear-gradient(135deg, #63FFB6, #36D986);
+  color: #0a0a0a;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 16px 36px;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+}
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(99,255,182,0.4);
+}
+.cta-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.cta-btn-outline {
+  background: transparent;
+  color: #63FFB6;
+  border: 2px solid #63FFB6;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 14px 32px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.cta-btn-outline:hover {
+  background: rgba(99,255,182,0.1);
+  transform: translateY(-2px);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px solid rgba(99,255,182, 0.3);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  transition: all 0.4s ease;
+  box-shadow: 0 8px 32px rgba(99,255,182, 0.1);
+}
+.glass-card:hover {
+  border-color: rgba(99,255,182, 0.6);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(99,255,182, 0.25);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #63FFB6, #36D986, #63FFB6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.result-img-container {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid rgba(99,255,182, 0.2);
+  transition: all 0.4s ease;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(99,255,182, 0.1);
+  height: 420px;
+}
+.result-img-container:hover {
+  border-color: rgba(99,255,182, 0.5);
+  transform: scale(1.02);
+  box-shadow: 0 20px 60px rgba(99,255,182, 0.3);
+}
+.result-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.nav-blur {
+  background: rgba(10, 22, 40, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 2px solid rgba(99,255,182, 0.4);
+  box-shadow: 0 8px 32px rgba(99,255,182, 0.15);
+}
+
+.section-divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(99,255,182, 0.4), transparent);
+}
+
+.tab-btn {
+  padding: 10px 24px;
+  border-radius: 100px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(99,255,182, 0.3);
+  background: transparent;
+  color: #ffffff;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, #63FFB6, #36D986);
+  color: #0a0a0a;
+  border-color: transparent;
+  box-shadow: 0 8px 24px rgba(99,255,182, 0.35);
+}
+.tab-btn:hover:not(.active) {
+  border-color: rgba(99,255,182, 0.5);
+  color: #ffffff;
+  background: rgba(99,255,182, 0.08);
+}
+
+.process-line {
+  position: absolute;
+  left: 24px;
+  top: 48px;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #63FFB6, rgba(99,255,182,0.1));
+}
+
+.stat-card {
+  text-align: center;
+  padding: 24px;
+}
+
+.testimonial-card {
+  background: rgba(255, 255, 255, 0.55);
+  border: 2px solid rgba(99,255,182, 0.25);
+  border-radius: 20px;
+  padding: 32px;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(99,255,182, 0.1);
+}
+.testimonial-card:hover {
+  border-color: rgba(99,255,182, 0.5);
+  box-shadow: 0 16px 48px rgba(99,255,182, 0.2);
+  transform: translateY(-4px);
+}
+
+/* Mobile menu */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(10, 22, 40, 0.95);
+  z-index: 100;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 600;
+  text-decoration: none;
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Grid for results */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 28px;
+}
+@media (max-width: 640px) {
+  .results-grid { grid-template-columns: 1fr; }
+}
+
+/* Form styles */
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+.form-input::placeholder { color: rgba(255, 255, 255, 0.4); }
+.form-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #63FFB6, #36D986);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(99,255,182, 0.3);
+  border-top-color: #63FFB6;
+  border-radius: 50%;
+  animation: spin-loader 0.8s linear infinite;
+}
+
+.whatsapp-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #25D366, #20BA5A);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 24px rgba(37, 211, 102, 0.4);
+  transition: all 0.3s ease;
+  z-index: 40;
+  text-decoration: none;
+  animation: float 3s ease-in-out infinite;
+}
+
+.whatsapp-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 32px rgba(37, 211, 102, 0.6);
+}
+
+.whatsapp-btn:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 640px) {
+  .whatsapp-btn {
+    bottom: 16px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+  }
+}
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full text-white font-dm" style="background: linear-gradient(135deg, #0a1628 0%, #0f2a4a 20%, #1a4d7a 40%, #0d3b66 60%, #0a2847 80%, #051428 100%); min-height: 100vh;">
+  <div class="app-wrapper w-full" id="app-wrapper"><!-- NAV -->
+   <nav class="nav-blur fixed top-0 left-0 right-0 z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between"><a href="#hero" class="font-outfit font-800 text-2xl tracking-tight"> <span class="gradient-text font-black">Pixel</span><span class="text-white">Craft</span> <span class="text-white text-lg">Agency</span> </a>
+     <div class="hidden md:flex items-center gap-8"><a href="#about" class="text-sm font-medium transition" style="color: #fff;">About</a> <a href="#services" class="text-sm font-medium transition" style="color: #fff;">Services</a> <a href="#results" class="text-sm font-medium transition" style="color: #fff;">Results</a> <a href="#process" class="text-sm font-medium transition" style="color: #fff;">Process</a> <a href="#testimonials" class="text-sm font-medium transition" style="color: #fff;">Reviews</a> <a href="#cta" class="cta-btn-outline !py-3 !px-6 !text-sm">Contact Us</a>
+     </div><button id="mobile-toggle" class="md:hidden" style="color: #fff;" aria-label="Menu"> <i data-lucide="menu" style="width:28px;height:28px;"></i> </button>
+    </div>
+   </nav><!-- Mobile Menu -->
+   <div class="mobile-menu" id="mobile-menu"><button id="mobile-close" class="absolute top-6 right-6 text-white" aria-label="Close menu"> <i data-lucide="x" style="width:32px;height:32px;"></i> </button> <a href="#about" onclick="closeMobile()">About</a> <a href="#services" onclick="closeMobile()">Services</a> <a href="#results" onclick="closeMobile()">Results</a> <a href="#process" onclick="closeMobile()">Process</a> <a href="#testimonials" onclick="closeMobile()">Reviews</a> <a href="#cta" onclick="closeMobile()" class="cta-btn !text-lg">Contact Us</a>
+   </div><!-- HERO -->
+   <section id="hero" class="relative min-h-[100%] flex items-center justify-center px-6 pt-24 pb-16 overflow-hidden"><!-- BG Effects -->
+    <div class="absolute inset-0 pointer-events-none">
+     <div class="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full" style="background: radial-gradient(circle, rgba(99,255,182,0.08) 0%, transparent 70%);"></div>
+     <div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] rounded-full" style="background: radial-gradient(circle, rgba(54,217,134,0.06) 0%, transparent 70%);"></div>
+    </div>
+    <div class="max-w-5xl mx-auto text-center relative z-10">
+     <div class="hero-animate hero-delay-1 inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/10 bg-white/5 mb-8"><span class="w-2 h-2 rounded-full bg-[#63FFB6] inline-block" style="animation: pulse-glow 2s infinite;"></span> <span class="text-sm text-white/70 font-medium">Trusted by 50+ Home Improvement Companies</span>
+     </div>
+     <h1 id="hero-headline" class="hero-animate hero-delay-2 font-outfit font-800 text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight mb-6">We Help Home Improvement Businesses Generate <span class="gradient-text">50+ Qualified Leads</span> Monthly</h1>
+     <p id="hero-sub" class="hero-animate hero-delay-3 text-lg md:text-xl text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed">Performance-driven ad campaigns for roofing, HVAC, plumbing &amp; renovation companies across the USA &amp; Europe. More leads. Lower costs. Real growth.</p>
+     <div class="hero-animate hero-delay-4 flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"><a href="https://calendly.com/azmainahmedofficial0/new-meeting" target="_blank" rel="noopener noreferrer" class="cta-btn"> <i data-lucide="phone" style="width:18px;height:18px;"></i> Get Free Strategy Call </a> <a href="#results" class="cta-btn-outline"> <i data-lucide="bar-chart-2" style="width:18px;height:18px;"></i> See Our Results </a>
+     </div><!-- Stats -->
+     <div class="hero-animate hero-delay-4 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+      <div class="stat-card">
+       <div class="font-outfit font-800 text-3xl md:text-4xl gradient-text">
+        50+
+       </div>
+       <div class="text-xs text-white/40 mt-1 uppercase tracking-wider">
+        Clients Served
+       </div>
+      </div>
+      <div class="stat-card">
+       <div class="font-outfit font-800 text-3xl md:text-4xl gradient-text">
+        10K+
+       </div>
+       <div class="text-xs text-white/40 mt-1 uppercase tracking-wider">
+        Leads Generated
+       </div>
+      </div>
+      <div class="stat-card">
+       <div class="font-outfit font-800 text-3xl md:text-4xl gradient-text">
+        $2M+
+       </div>
+       <div class="text-xs text-white/40 mt-1 uppercase tracking-wider">
+        Ad Spend Managed
+       </div>
+      </div>
+      <div class="stat-card">
+       <div class="font-outfit font-800 text-3xl md:text-4xl gradient-text">
+        4.5x
+       </div>
+       <div class="text-xs text-white/40 mt-1 uppercase tracking-wider">
+        Avg. ROAS
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <div class="section-divider"></div><!-- ABOUT -->
+   <section id="about" class="py-24 px-6">
+    <div class="max-w-6xl mx-auto">
+     <div class="grid md:grid-cols-2 gap-16 items-center">
+      <div class="animate-on-scroll"><span class="text-[#63FFB6] text-sm font-semibold uppercase tracking-widest">About Us</span>
+       <h2 class="font-outfit font-800 text-3xl md:text-5xl mt-4 mb-6 leading-tight">We Don't Do Generic Marketing. <span class="gradient-text">We Build Lead Machines.</span></h2>
+       <p id="about-desc" class="text-white/50 text-lg leading-relaxed mb-6">Pixel Craft Agency is a performance marketing agency laser-focused on one thing: generating high-quality leads for home improvement businesses. From roofing to HVAC, plumbing to full renovations — we've helped 50+ companies across the USA and Europe scale profitably with paid ads.</p>
+       <p class="text-white/50 leading-relaxed mb-8">No vanity metrics. No fluff. Just real leads that turn into booked jobs and revenue growth. Our team combines deep industry knowledge with cutting-edge ad strategies across Meta, Google, and TikTok.</p>
+       <div class="flex flex-wrap gap-4 mb-8">
+        <div class="flex items-center gap-2 text-sm text-white/70">
+         <i data-lucide="check-circle" style="width:18px;height:18px;color:#63FFB6;"></i> USA &amp; Europe Specialists
+        </div>
+        <div class="flex items-center gap-2 text-sm text-white/70">
+         <i data-lucide="check-circle" style="width:18px;height:18px;color:#63FFB6;"></i> Home Improvement Niche
+        </div>
+        <div class="flex items-center gap-2 text-sm text-white/70">
+         <i data-lucide="check-circle" style="width:18px;height:18px;color:#63FFB6;"></i> ROI-Focused Campaigns
+        </div>
+       </div>
+      </div>
+      <div class="animate-on-scroll delay-2 relative">
+       <div class="glass-card p-8">
+        <div class="grid grid-cols-2 gap-6">
+         <div class="text-center p-6 rounded-2xl bg-white/5">
+          <div class="font-outfit font-800 text-4xl gradient-text">
+           98%
+          </div>
+          <div class="text-sm text-white/40 mt-2">
+           Client Retention
+          </div>
+         </div>
+         <div class="text-center p-6 rounded-2xl bg-white/5">
+          <div class="font-outfit font-800 text-4xl gradient-text">
+           3x
+          </div>
+          <div class="text-sm text-white/40 mt-2">
+           Avg Lead Increase
+          </div>
+         </div>
+         <div class="text-center p-6 rounded-2xl bg-white/5">
+          <div class="font-outfit font-800 text-4xl gradient-text">
+           45%
+          </div>
+          <div class="text-sm text-white/40 mt-2">
+           Lower CPL
+          </div>
+         </div>
+         <div class="text-center p-6 rounded-2xl bg-white/5">
+          <div class="font-outfit font-800 text-4xl gradient-text">
+           24/7
+          </div>
+          <div class="text-sm text-white/40 mt-2">
+           Campaign Monitoring
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <div class="section-divider"></div><!-- SERVICES -->
+   <section id="services" class="py-24 px-6">
+    <div class="max-w-6xl mx-auto">
+     <div class="text-center mb-16 animate-on-scroll"><span class="text-[#63FFB6] text-sm font-semibold uppercase tracking-widest">Our Services</span>
+      <h2 class="font-outfit font-800 text-3xl md:text-5xl mt-4">Channels That <span class="gradient-text">Drive Results</span></h2>
+      <p class="text-white/40 mt-4 max-w-xl mx-auto">Every campaign is custom-built for home improvement businesses to maximize leads and minimize wasted spend.</p>
+     </div>
+     <div class="grid md:grid-cols-2 gap-6"><!-- Meta Ads -->
+      <div class="glass-card p-8 animate-on-scroll delay-1" style="background: rgba(24, 119, 242, 0.08); border-color: rgba(24, 119, 242, 0.3);">
+       <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center mb-6">
+        <svg viewbox="0 0 24 24" width="32" height="32" fill="#1877F2">
+         <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm3.6 11.9h-2.4v7.6h-3.2v-7.6H9v-2.8h1.6V7.7c0-1.3.3-3.3 3.3-3.3h2.6v2.6h-1.9c-.3 0-.5.2-.5.5v1.5h2.4l-.4 2.8z" />
+        </svg>
+       </div>
+       <h3 class="font-outfit font-700 text-2xl mb-3" style="color: #1877F2;">Meta Ads</h3>
+       <p class="text-sm leading-relaxed mb-4" style="color: #e0e0e0;">Facebook &amp; Instagram ad campaigns that put your services in front of homeowners actively looking for contractors.</p>
+       <ul class="space-y-2">
+        <li class="flex items-start gap-2 text-sm" style="color: #b0b0b0;"><i data-lucide="arrow-right" style="width:16px;height:16px;color:#1877F2;flex-shrink:0;margin-top:2px;"></i> Hyper-targeted local audiences</li>
+        <li class="flex items-start gap-2 text-sm" style="color: #b0b0b0;"><i data-lucide="arrow-right" style="width:16px;height:16px;color:#1877F2;flex-shrink:0;margin-top:2px;"></i> Lead form &amp; landing page campaigns</li>
+        <li class="flex items-start gap-2 text-sm" style="color: #b0b0b0;"><i data-lucide="arrow-right" style="width:16px;height:16px;color:#1877F2;flex-shrink:0;margin-top:2px;"></i> Retargeting &amp; lookalike audiences</li>
+       </ul>
+      </div><!-- Google Ads -->
+      <div class="glass-card p-8 animate-on-scroll delay-2" style="background: rgba(66, 133, 244, 0.08); border-color: rgba(66, 133, 244, 0.3);">
+       <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center mb-6">
+        <svg viewbox="0 0 24 24" width="32" height="32">
+         <text x="1" y="16" font-size="12" font-weight="bold" fill="#EA4335">
+          G
+         </text><text x="7" y="16" font-size="12" font-weight="bold" fill="#4285F4">
+          o
+         </text><text x="13" y="16" font-size="12" font-weight="bold" fill="#FBBC04">
+          o
+         </text><text x="19" y="16" font-size="12" font-weight="bold" fill="#EA4335">
+          g
+         </text><text x="24" y="16" font-size="12" font-weight="bold" fill="#34A853">
+          l
+         </text>
+        </svg>
+       </div>
+       <h3 class="font-outfit font-700 text-2xl mb-3" style="color: #4285F4;">Google Ads</h3>
+       <p class="text-sm leading-relaxed mb-4" style="color: #e0e0e0;">Capture high-intent homeowners the moment they search for services like yours on Google, YouTube, and Display.</p>
+       <ul class="space-y-2">
+        <li class="flex items-start gap-2 text-sm" style="color: #b0b0b0;"><i data-lucide="arrow-right" style="width:16px;height:16px;color:#4285F4;flex-shrink:0;margin-top:2px;"></i> Search campaigns for high-intent keywords</li>
+        <li class="flex items-start gap-2 text-sm" style="color: #b0b0b0;"><i data-lucide="arrow-right" style="width:16px;height:16px;color:#4285F4;flex-shrink:0;margin-top:2px;"></i> YouTube pre-roll &amp; display ads</li>
+        <li class="flex items-start gap-2 text-sm" style="color: #b0b0b0;"><i data-lucide="arrow-right" style="width:16px;height:16px;color:#4285F4;flex-shrink:0;margin-top:2px;"></i> Local Service Ads optimization</li>
+       </ul>
+      </div><!-- TikTok Ads -->
+      <div class="glass-card p-8 animate-on-scroll delay-3" style="background: rgba(37, 244, 238, 0.08); border-color: rgba(37, 244, 238, 0.3);">
+       <div class="w-14 h-14 rounded-2xl bg-black flex items-center justify-center mb-6">
+        <svg viewbox="0 0 24 24" width="32" height="32">
+         <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.68v13.7a2.4 2.4 0 1 1-4.8-2.4A2.4 2.4 0 0 1 8.95 9V5.4a6.05 6.05 0 1 0 11.56 3.2M15.4 10a4.83 4.83 0 0 0 4.8 4.8V10a4.83 4.83 0 0 0-4.8-4.8" fill="#25F4EE" />
+        </svg>
+       </div>
+       <h3 class="font-outfit font-700 text-2xl mb-3" style="color: #25F4EE;">TikTok Ads</h3>
+       <p class="text-sm leading-relaxed mb-4" style="color: #e0e0e0;">Reach a massive new audience of homeowners through viral-style video ads that generate leads at scale.</p>
+       <ul class="space-y-2">
+        <li class="flex items-start gap-2 text-sm" style="color: #b0b0b0;"><i data-lucide="arrow-right" style="width:16px;height:16px;color:#25F4EE;flex-shrink:0;margin-top:2px;"></i> Scroll-stopping creative ads</li>
+        <li class="flex items-start gap-2 text-sm" style="color: #b0b0b0;"><i data-lucide="arrow-right" style="width:16px;height:16px;color:#25F4EE;flex-shrink:0;margin-top:2px;"></i> Lead generation campaigns</li>
+        <li class="flex items-start gap-2 text-sm" style="color: #b0b0b0;"><i data-lucide="arrow-right" style="width:16px;height:16px;color:#25F4EE;flex-shrink:0;margin-top:2px;"></i> Brand awareness at low CPM</li>
+       </ul>
+      </div><!-- Content Marketing -->
+      <div class="glass-card p-8 animate-on-scroll delay-4" style="background: rgba(99, 255, 182, 0.08); border-color: rgba(99, 255, 182, 0.3);">
+       <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center mb-6">
+        <svg viewbox="0 0 24 24" width="32" height="32">
+         <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" fill="#5F6368" /><path d="M7 10h10v2H7z" fill="#5F6368" /><path d="M7 14h10v2H7z" fill="#5F6368" /><rect x="7" y="6" width="10" height="2" fill="#5F6368" />
+        </svg>
+       </div>
+       <h3 class="font-outfit font-700 text-2xl mb-3" style="color: #63FFB6;">Content Marketing</h3>
+       <p class="text-sm leading-relaxed mb-4" style="color: #e0e0e0;">Build trust and authority with strategic content that educates homeowners and drives organic lead flow.</p>
+       <ul class="space-y-2">
+        <li class="flex items-start gap-2 text-sm" style="color: #b0b0b0;"><i data-lucide="arrow-right" style="width:16px;height:16px;color:#63FFB6;flex-shrink:0;margin-top:2px;"></i> Blog &amp; SEO content strategy</li>
+        <li class="flex items-start gap-2 text-sm" style="color: #b0b0b0;"><i data-lucide="arrow-right" style="width:16px;height:16px;color:#63FFB6;flex-shrink:0;margin-top:2px;"></i> Social media content calendars</li>
+        <li class="flex items-start gap-2 text-sm" style="color: #b0b0b0;"><i data-lucide="arrow-right" style="width:16px;height:16px;color:#63FFB6;flex-shrink:0;margin-top:2px;"></i> Video scripts &amp; ad creatives</li>
+       </ul>
+      </div>
+     </div>
+    </div>
+   </section>
+   <div class="section-divider"></div><!-- RESULTS -->
+   <section id="results" class="py-24 px-6">
+    <div class="max-w-6xl mx-auto">
+     <div class="text-center mb-12 animate-on-scroll"><span class="text-[#63FFB6] text-sm font-semibold uppercase tracking-widest">Case Studies</span>
+      <h2 class="font-outfit font-800 text-3xl md:text-5xl mt-4">Real Campaigns. <span class="gradient-text">Real Results.</span></h2>
+      <p class="text-white/40 mt-4 max-w-xl mx-auto">Screenshots straight from our ad dashboards — no fluff, just proof.</p>
+     </div><!-- Tabs -->
+     <div class="flex flex-wrap justify-center gap-3 mb-12 animate-on-scroll"><button class="tab-btn active" data-tab="meta" onclick="switchTab('meta')">Step 1: Meta Ads Results</button> <button class="tab-btn" data-tab="google" onclick="switchTab('google')">Step 2: Google Ads Results</button>
+     </div><!-- Meta Results -->
+     <div id="tab-meta" class="results-tab">
+      <div class="results-grid">
+       <div class="result-img-container animate-on-scroll delay-1"><img src="https://i.postimg.cc/PqzxMyCw/image-(2).png" alt="Meta Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          META ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          Generated 120+ leads in 30 days
+         </div>
+        </div>
+       </div>
+       <div class="result-img-container animate-on-scroll delay-2"><img src="https://i.postimg.cc/mDmgvrNx/fdalton2.webp" alt="Meta Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          META ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          Reduced cost per lead by 45%
+         </div>
+        </div>
+       </div>
+       <div class="result-img-container animate-on-scroll delay-3"><img src="https://i.postimg.cc/Xqh7vDzF/ef3f90d7-0d33-4817-934c-141f14185b94.png" alt="Meta Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          META ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          $12.50 average cost per lead
+         </div>
+        </div>
+       </div>
+       <div class="result-img-container animate-on-scroll delay-1"><img src="https://i.postimg.cc/wTyjrg12/ad531e4e-12bb-4984-8d33-ce7eac7f5f30.png" alt="Meta Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          META ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          4.2x ROAS for renovation company
+         </div>
+        </div>
+       </div>
+       <div class="result-img-container animate-on-scroll delay-2"><img src="https://i.postimg.cc/bN7wcWbw/ad2.png" alt="Meta Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          META ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          85 leads in 2 weeks — HVAC client
+         </div>
+        </div>
+       </div>
+       <div class="result-img-container animate-on-scroll delay-3"><img src="https://i.postimg.cc/HL2YMLNk/ssc23s.png" alt="Meta Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          META ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          Scaled from $50/day to $500/day profitably
+         </div>
+        </div>
+       </div>
+       <div class="result-img-container animate-on-scroll delay-1"><img src="https://i.postimg.cc/fLqMHrDy/washuk.webp" alt="Meta Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          META ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          200+ leads/month for plumbing company
+         </div>
+        </div>
+       </div>
+       <div class="result-img-container animate-on-scroll delay-2"><img src="https://i.postimg.cc/2STjb6MG/sonnet21.webp" alt="Meta Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          META ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          3.8x ROAS — roofing campaign
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Google Results -->
+     <div id="tab-google" class="results-tab" style="display:none;">
+      <div class="results-grid">
+       <div class="result-img-container animate-on-scroll delay-1"><img src="https://i.postimg.cc/HnS892PX/Whats-App-Image-2026-03-28-at-9-58-33-AM.jpg" alt="Google Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          GOOGLE ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          $8.20 cost per lead — search campaign
+         </div>
+        </div>
+       </div>
+       <div class="result-img-container animate-on-scroll delay-2"><img src="https://i.postimg.cc/X7zyZs5b/Whats-App-Image-2026-03-28-at-9-58-34-AM-(1).jpg" alt="Google Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          GOOGLE ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          5.1x ROAS on display campaigns
+         </div>
+        </div>
+       </div>
+       <div class="result-img-container animate-on-scroll delay-3"><img src="https://i.postimg.cc/fb4tCk5F/Whats-App-Image-2026-03-28-at-9-58-34-AM-(2).jpg" alt="Google Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          GOOGLE ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          150+ conversions in 30 days
+         </div>
+        </div>
+       </div>
+       <div class="result-img-container animate-on-scroll delay-1"><img src="https://i.postimg.cc/wBhtGHG8/Whats-App-Image-2026-03-28-at-9-58-34-AM-(3).jpg" alt="Google Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          GOOGLE ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          72% conversion rate increase
+         </div>
+        </div>
+       </div>
+       <div class="result-img-container animate-on-scroll delay-2"><img src="https://i.postimg.cc/XJLrnLWc/Whats-App-Image-2026-03-28-at-9-58-34-AM.jpg" alt="Google Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          GOOGLE ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          Roofing client — 90 leads/month
+         </div>
+        </div>
+       </div>
+       <div class="result-img-container animate-on-scroll delay-3"><img src="https://i.postimg.cc/d30L3CtC/Whats-App-Image-2026-03-28-at-9-58-35-AM-(1).jpg" alt="Google Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          GOOGLE ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          Reduced CPA by 38% in 60 days
+         </div>
+        </div>
+       </div>
+       <div class="result-img-container animate-on-scroll delay-1"><img src="https://i.postimg.cc/ZYfWgwVN/Whats-App-Image-2026-03-28-at-9-58-35-AM-(2).jpg" alt="Google Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          GOOGLE ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          HVAC company — 6.2x ROAS
+         </div>
+        </div>
+       </div>
+       <div class="result-img-container animate-on-scroll delay-2"><img src="https://i.postimg.cc/3JdkH2cz/Whats-App-Image-2026-03-28-at-9-58-35-AM.jpg" alt="Google Ads Result" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a2e,#16213e)';this.alt='Result image';">
+        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+         <div class="text-xs text-[#63FFB6] font-semibold">
+          GOOGLE ADS
+         </div>
+         <div class="text-sm font-semibold mt-1 text-white">
+          $250K+ revenue attributed to ads
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <div class="section-divider"></div><!-- PROCESS -->
+   <section id="process" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+     <div class="text-center mb-16 animate-on-scroll"><span class="text-[#63FFB6] text-sm font-semibold uppercase tracking-widest">Our Process</span>
+      <h2 class="font-outfit font-800 text-3xl md:text-5xl mt-4">From Strategy to <span class="gradient-text">Scale</span></h2>
+      <p class="text-white/40 mt-4 max-w-lg mx-auto">A proven 4-step framework that turns your ad budget into a consistent lead generation engine.</p>
+     </div>
+     <div class="space-y-8">
+      <div class="flex gap-6 items-start animate-on-scroll delay-1">
+       <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-gradient-to-br from-[#63FFB6] to-[#36D986] flex items-center justify-center font-outfit font-800 text-lg text-[#0a0a0a]">
+        1
+       </div>
+       <div>
+        <h3 class="font-outfit font-700 text-xl mb-2">Research &amp; Strategy</h3>
+        <p class="text-white/40 text-sm leading-relaxed">We analyze your market, competitors, and ideal customer profile. Then we build a custom ad strategy tailored to your service area and budget.</p>
+       </div>
+      </div>
+      <div class="flex gap-6 items-start animate-on-scroll delay-2">
+       <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-gradient-to-br from-[#63FFB6] to-[#36D986] flex items-center justify-center font-outfit font-800 text-lg text-[#0a0a0a]">
+        2
+       </div>
+       <div>
+        <h3 class="font-outfit font-700 text-xl mb-2">Funnel Setup</h3>
+        <p class="text-white/40 text-sm leading-relaxed">We create high-converting landing pages, lead forms, and tracking systems so every click counts and every lead is captured.</p>
+       </div>
+      </div>
+      <div class="flex gap-6 items-start animate-on-scroll delay-3">
+       <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-gradient-to-br from-[#63FFB6] to-[#36D986] flex items-center justify-center font-outfit font-800 text-lg text-[#0a0a0a]">
+        3
+       </div>
+       <div>
+        <h3 class="font-outfit font-700 text-xl mb-2">Ad Launch</h3>
+        <p class="text-white/40 text-sm leading-relaxed">We launch targeted campaigns across Meta, Google, and TikTok with proven ad creatives and copy that speaks directly to homeowners.</p>
+       </div>
+      </div>
+      <div class="flex gap-6 items-start animate-on-scroll delay-4">
+       <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-gradient-to-br from-[#63FFB6] to-[#36D986] flex items-center justify-center font-outfit font-800 text-lg text-[#0a0a0a]">
+        4
+       </div>
+       <div>
+        <h3 class="font-outfit font-700 text-xl mb-2">Optimization &amp; Scaling</h3>
+        <p class="text-white/40 text-sm leading-relaxed">We continuously optimize targeting, creatives, and budgets to lower your CPL and scale winning campaigns for maximum ROI.</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <div class="section-divider"></div><!-- TESTIMONIALS -->
+   <section id="testimonials" class="py-24 px-6">
+    <div class="max-w-6xl mx-auto">
+     <div class="text-center mb-16 animate-on-scroll"><span class="text-[#63FFB6] text-sm font-semibold uppercase tracking-widest">Testimonials</span>
+      <h2 class="font-outfit font-800 text-3xl md:text-5xl mt-4">What Our <span class="gradient-text">Clients Say</span></h2>
+     </div>
+     <div class="grid md:grid-cols-3 gap-6">
+      <div class="testimonial-card animate-on-scroll delay-1">
+       <div class="flex items-center gap-1 mb-4"><i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i> <i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i> <i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i> <i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i> <i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i>
+       </div>
+       <p class="text-white/60 text-sm leading-relaxed mb-6">"Pixel Craft completely transformed our lead flow. We went from 10 leads a month to over 80 in just 6 weeks. Our roofing business has never been busier."</p>
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#63FFB6] to-[#36D986] flex items-center justify-center font-outfit font-700 text-sm text-[#0a0a0a]">
+         MJ
+        </div>
+        <div>
+         <div class="text-sm font-semibold">
+          Mike Johnson
+         </div>
+         <div class="text-xs text-white/40">
+          Summit Roofing Co. — Texas
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="testimonial-card animate-on-scroll delay-2">
+       <div class="flex items-center gap-1 mb-4"><i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i> <i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i> <i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i> <i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i> <i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i>
+       </div>
+       <p class="text-white/60 text-sm leading-relaxed mb-6">"Best marketing investment we've ever made. They understand the home improvement space and deliver leads that actually convert into paying customers."</p>
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#63FFB6] to-[#36D986] flex items-center justify-center font-outfit font-700 text-sm text-[#0a0a0a]">
+         SR
+        </div>
+        <div>
+         <div class="text-sm font-semibold">
+          Sarah Reynolds
+         </div>
+         <div class="text-xs text-white/40">
+          ProComfort HVAC — Florida
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="testimonial-card animate-on-scroll delay-3">
+       <div class="flex items-center gap-1 mb-4"><i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i> <i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i> <i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i> <i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i> <i data-lucide="star" style="width:16px;height:16px;color:#63FFB6;fill:#63FFB6;"></i>
+       </div>
+       <p class="text-white/60 text-sm leading-relaxed mb-6">"We were skeptical about digital ads, but Pixel Craft proved us wrong. 4.5x return on ad spend in our first 90 days. They handle everything professionally."</p>
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#63FFB6] to-[#36D986] flex items-center justify-center font-outfit font-700 text-sm text-[#0a0a0a]">
+         DW
+        </div>
+        <div>
+         <div class="text-sm font-semibold">
+          David Weber
+         </div>
+         <div class="text-xs text-white/40">
+          Weber Renovations — London, UK
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <div class="section-divider"></div><!-- CTA with Contact Form -->
+   <section id="cta" class="py-24 px-6 relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none">
+     <div class="absolute top-[50%] left-[50%] w-[800px] h-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full" style="background: radial-gradient(circle, rgba(99,255,182,0.08) 0%, transparent 60%);"></div>
+    </div>
+    <div class="max-w-3xl mx-auto relative z-10">
+     <div class="animate-on-scroll text-center mb-12"><span class="text-[#63FFB6] text-sm font-semibold uppercase tracking-widest">Let's Talk</span>
+      <h2 id="final-cta-headline" class="font-outfit font-800 text-3xl md:text-5xl mt-4 mb-6 leading-tight">Ready to Scale Your <span class="gradient-text">Home Improvement Business?</span></h2>
+      <p class="text-white/40 text-lg max-w-xl mx-auto">Book a free 30-minute strategy call. We'll audit your current marketing, identify growth opportunities, and show you exactly how we'd generate more leads.</p>
+     </div><!-- Contact Form -->
+     <div class="glass-card p-8 md:p-12 animate-on-scroll delay-1">
+      <form id="contact-form" class="space-y-5" onsubmit="handleFormSubmit(event)">
+       <div>
+        <label for="form-name" class="form-label">Full Name *</label> <input type="text" id="form-name" name="name" required placeholder="Your name" class="form-input">
+       </div>
+       <div>
+        <label for="form-email" class="form-label">Email Address *</label> <input type="email" id="form-email" name="email" required placeholder="your@email.com" class="form-input">
+       </div>
+       <div>
+        <label for="form-phone" class="form-label">Phone Number *</label> <input type="tel" id="form-phone" name="phone" required placeholder="+1 (800) 123-4567" class="form-input">
+       </div>
+       <div>
+        <label for="form-service" class="form-label">Service Type *</label> <select id="form-service" name="service_type" required class="form-input" style="background: linear-gradient(135deg, rgba(99,255,182,0.15) 0%, rgba(54,217,134,0.1) 100%);"> <option value="" disabled selected style="background: #0a1628; color: #888;">Select a service</option> <option value="Roofing" style="background: linear-gradient(135deg, #63FFB6 0%, #36D986 100%); color: #0a0a0a; font-weight: 600;">🏠 Roofing</option> <option value="HVAC" style="background: linear-gradient(135deg, #63FFB6 0%, #36D986 100%); color: #0a0a0a; font-weight: 600;">❄️ HVAC</option> <option value="Plumbing" style="background: linear-gradient(135deg, #63FFB6 0%, #36D986 100%); color: #0a0a0a; font-weight: 600;">🚰 Plumbing</option> <option value="Renovation" style="background: linear-gradient(135deg, #63FFB6 0%, #36D986 100%); color: #0a0a0a; font-weight: 600;">🔨 Renovation</option> <option value="Other" style="background: linear-gradient(135deg, #63FFB6 0%, #36D986 100%); color: #0a0a0a; font-weight: 600;">⭐ Other</option> </select>
+       </div>
+       <div>
+        <label for="form-message" class="form-label">Message (Optional)</label> <textarea id="form-message" name="message" placeholder="Tell us about your business..." rows="4" class="form-input resize-none"></textarea>
+       </div><button type="submit" id="submit-btn" class="cta-btn w-full justify-center text-lg mt-6"> <i data-lucide="send" style="width:20px;height:20px;"></i> <span id="btn-text">Send My Information</span> </button>
+       <p class="text-white/50 text-sm text-center font-semibold">We will contact you in the minimum time</p>
+      </form><!-- Success Message -->
+      <div id="success-message" style="display:none;" class="text-center py-8">
+       <div class="mb-4">
+        <i data-lucide="check-circle" style="width:48px;height:48px;color:#63FFB6;margin:0 auto;"></i>
+       </div>
+       <h3 class="text-xl font-outfit font-700 text-white mb-2">Thank You!</h3>
+       <p class="text-white/60 mb-6">We've received your information and will contact you within 24 hours to discuss your lead generation strategy.</p><button onclick="resetForm()" class="cta-btn-outline"> <i data-lucide="arrow-left" style="width:18px;height:18px;"></i> Submit Another Inquiry </button>
+      </div>
+     </div>
+     <p class="text-white/30 text-sm text-center mt-8">No obligations. No pressure. Just results.</p>
+    </div>
+   </section><!-- FOOTER -->
+   <footer class="relative py-24 px-6 overflow-hidden" style="background: linear-gradient(180deg, rgba(10,16,28,0) 0%, rgba(10,22,40,0.5) 100%); border-top: 2px solid rgba(99,255,182,0.2);">
+    <div class="absolute inset-0 pointer-events-none">
+     <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full" style="background: radial-gradient(circle, rgba(99,255,182,0.05) 0%, transparent 70%);"></div>
+    </div>
+    <div class="max-w-6xl mx-auto relative z-10"><!-- Main Footer Content -->
+     <div class="grid md:grid-cols-4 gap-12 mb-16"><!-- Brand Column -->
+      <div>
+       <div class="font-outfit font-800 text-2xl mb-3">
+        <span class="gradient-text">Pixel</span><span class="text-white">Craft</span>
+       </div>
+       <p class="text-white/50 text-sm leading-relaxed mb-6">Performance marketing agency generating high-quality leads for home improvement businesses across USA &amp; Europe.</p>
+       <div class="flex items-center gap-3"><span class="text-xs uppercase tracking-wider text-white/40 font-semibold">Follow us</span>
+        <div class="flex gap-3"><a href="#" class="w-9 h-9 rounded-lg bg-white/10 hover:bg-[#63FFB6] text-white/50 hover:text-[#0a0a0a] transition flex items-center justify-center" aria-label="Instagram"><i data-lucide="instagram" style="width:16px;height:16px;"></i></a> <a href="#" class="w-9 h-9 rounded-lg bg-white/10 hover:bg-[#63FFB6] text-white/50 hover:text-[#0a0a0a] transition flex items-center justify-center" aria-label="LinkedIn"><i data-lucide="linkedin" style="width:16px;height:16px;"></i></a> <a href="#" class="w-9 h-9 rounded-lg bg-white/10 hover:bg-[#63FFB6] text-white/50 hover:text-[#0a0a0a] transition flex items-center justify-center" aria-label="Facebook"><i data-lucide="facebook" style="width:16px;height:16px;"></i></a>
+        </div>
+       </div>
+      </div><!-- Navigation -->
+      <div>
+       <h4 class="font-outfit font-700 text-sm uppercase tracking-wider mb-6 text-white">Navigation</h4>
+       <div class="space-y-3"><a href="#about" class="block text-sm text-white/50 hover:text-[#63FFB6] transition duration-300">About Us</a> <a href="#services" class="block text-sm text-white/50 hover:text-[#63FFB6] transition duration-300">Services</a> <a href="#results" class="block text-sm text-white/50 hover:text-[#63FFB6] transition duration-300">Case Studies</a> <a href="#process" class="block text-sm text-white/50 hover:text-[#63FFB6] transition duration-300">Our Process</a> <a href="#testimonials" class="block text-sm text-white/50 hover:text-[#63FFB6] transition duration-300">Reviews</a>
+       </div>
+      </div><!-- Services -->
+      <div>
+       <h4 class="font-outfit font-700 text-sm uppercase tracking-wider mb-6 text-white">Services</h4>
+       <div class="space-y-3"><a href="#services" class="block text-sm text-white/50 hover:text-[#63FFB6] transition duration-300">Meta Ads</a> <a href="#services" class="block text-sm text-white/50 hover:text-[#63FFB6] transition duration-300">Google Ads</a> <a href="#services" class="block text-sm text-white/50 hover:text-[#63FFB6] transition duration-300">TikTok Ads</a> <a href="#services" class="block text-sm text-white/50 hover:text-[#63FFB6] transition duration-300">Content Marketing</a>
+       </div>
+      </div><!-- Contact -->
+      <div>
+       <h4 class="font-outfit font-700 text-sm uppercase tracking-wider mb-6 text-white">Contact</h4>
+       <div class="space-y-4"><a href="mailto:hello@pixelcraft.agency" class="flex items-start gap-3 text-sm text-white/50 hover:text-[#63FFB6] transition group"> <i data-lucide="mail" style="width:16px;height:16px;flex-shrink:0;margin-top:2px;"></i> <span>hello@pixelcraft.agency</span> </a> <a href="tel:+1234567890" class="flex items-start gap-3 text-sm text-white/50 hover:text-[#63FFB6] transition"> <i data-lucide="phone" style="width:16px;height:16px;flex-shrink:0;margin-top:2px;"></i> <span>+1 (800) 555-LEAD</span> </a>
+        <div class="flex items-start gap-3 text-sm text-white/50"><i data-lucide="map-pin" style="width:16px;height:16px;flex-shrink:0;margin-top:2px;"></i> <span>USA &amp; Europe</span>
+        </div>
+       </div>
+      </div>
+     </div><!-- Divider -->
+     <div class="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8"></div><!-- Bottom Section -->
+     <div class="flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-white/40">
+      <div>
+       © 2025 Pixel Craft Agency. All rights reserved.
+      </div>
+      <div class="flex gap-6"><a href="#" class="hover:text-[#63FFB6] transition">Privacy Policy</a> <a href="#" class="hover:text-[#63FFB6] transition">Terms of Service</a> <a href="#" class="hover:text-[#63FFB6] transition">Cookie Policy</a>
+      </div>
+     </div>
+    </div>
+   </footer>
+  </div><!-- end app-wrapper --> <!-- WhatsApp Floating Button --> <a href="https://wa.me/YOUR_WHATSAPP_NUMBER" target="_blank" rel="noopener noreferrer" class="whatsapp-btn" aria-label="Contact us on WhatsApp" title="Chat with us on WhatsApp">
+   <svg width="28" height="28" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.6915026,2.4744748 C15.6693616,0.5574899 12.7771699,0.0151496 10.0151496,0.7575757 C5.51946903,1.9672897 2.40156281,6.1171862 2.40156281,11.1271186 C2.40156281,13.5651629 3.20394089,15.921086 4.62665147,17.8247862 L3.15768994,22.7822775 L8.47572815,21.1255411 C10.3424657,22.2283464 12.5032948,22.8319805 14.8058394,22.8319805 C20.6591372,22.8319805 25.3905325,18.0612159 25.3905325,12.2078382 C25.3905325,9.34613899 24.3426166,6.71854305 22.4156441,4.79146717 C21.4701835,3.8459977 20.3673782,3.02355625 19.1577098,2.40156281 C18.9398605,2.30769231 18.5846994,2.14610469 18.0424591,2.3639541 C17.6915026,2.4744748 17.6915026,2.4744748 17.6915026,2.4744748 Z" fill="#25D366" opacity="0.1" /> <path d="M12.0234,-0.00467625 C5.90509955,-0.00467625 0.996876405,4.89854657 0.996876405,10.9999489 C0.996876405,13.5558848 1.77945409,15.9779005 3.17778548,17.9575387 L1.41270857,23.3201793 L7.03352432,21.6274159 C9.01315254,22.8319805 11.4332621,23.5930884 14.0033722,23.5930884 C20.1216718,23.5930884 25.0233073,18.6913529 25.0233073,12.5729534 C25.0233073,9.52013805 23.9710853,6.7174254 22.1648702,4.61244648 C20.3351439,2.53346618 17.6387556,-0.00467625 12.0234,-0.00467625 Z" fill="#25D366" /> <path d="M18.7118644,14.0604026 C18.4585513,13.9498819 17.0585513,13.2657192 16.8406019,13.1813226 C16.6226525,13.0969259 16.4703196,13.0125293 16.2476793,13.2655081 C16.0250391,13.5184868 15.4832215,14.1265585 15.2872211,14.3485078 C15.0912208,14.5704572 14.8952204,14.59403 14.64191,14.4831092 C14.3885969,14.3722885 13.6038273,14.1072024 12.6795804,13.2657192 C11.9587611,12.6272568 11.4849765,11.8424872 11.2889761,11.5891741 C11.0929757,11.3358611 11.2739296,11.1492706 11.3848503,11.0381098 C11.4961659,10.9275128 11.6294927,10.7638505 11.740398,10.5678501 C11.8513033,10.3718497 11.7957247,10.1758494 11.7129181,10.064927 C11.6301114,9.95400461 11.1607949,8.55400461 10.9633393,8.08552203 C10.7730536,7.63513005 10.5793222,7.69149633 10.4411351,7.68385559 C10.3151136,7.67713145 10.1895154,7.67555155 10.0635938,7.6750761 C9.82888383,7.67403157 9.52274196,7.79415236 9.30519102,8.04866339 C9.0875401,8.30317443 8.48213197,8.98734413 8.48213197,10.387263 C8.48213197,11.7872231 9.32902818,13.1381801 9.44043839,13.3601295 C9.55184861,13.5820788 11.1559786,16.2288121 13.6382279,17.1534824 C14.2214862,17.381701 14.6861053,17.5269325 15.0552995,17.6397835 C15.6412272,17.8397521 16.1898069,17.8092805 16.6333876,17.726777 C17.1281817,17.6373879 18.1414891,17.0935725 18.3377703,16.9019894 C18.5340515,16.7098411 18.7301191,16.6969847 18.9472532,16.5857926 C19.1643872,16.4749708 19.0067445,14.3025906 18.7118644,14.0604026 Z" fill="white" />
+   </svg></a>
+  <script>
+// Default config
+const defaultConfig = {
+  hero_headline: 'We Help Home Improvement Businesses Generate <span class="gradient-text">50+ Qualified Leads</span> Monthly',
+  hero_subheadline: 'Performance-driven ad campaigns for roofing, HVAC, plumbing & renovation companies across the USA & Europe. More leads. Lower costs. Real growth.',
+  cta_button_text: 'Book a Call',
+  about_text: 'Pixel Craft Agency is a performance marketing agency laser-focused on one thing: generating high-quality leads for home improvement businesses. From roofing to HVAC, plumbing to full renovations — we\'ve helped 50+ companies across the USA and Europe scale profitably with paid ads.',
+  final_cta_headline: 'Ready to Scale Your <span class="gradient-text">Home Improvement Business?</span>',
+  background_color: '#0a0a0a',
+  accent_color: '#63FFB6',
+  text_color: '#ffffff',
+  surface_color: '#141414',
+  muted_color: '#888888',
+  font_family: 'Outfit',
+  font_size: 16
+};
+
+let currentLeadCount = 0;
+
+// Data SDK init
+const dataHandler = {
+  onDataChanged(data) {
+    currentLeadCount = data.length;
+  }
+};
+
+// Initialize Data SDK first
+(async () => {
+  const initResult = await window.dataSdk.init(dataHandler);
+  if (!initResult.isOk) {
+    console.error('Failed to initialize Data SDK');
+  }
+  
+  // Then initialize Element SDK
+  window.elementSdk.init({
+    defaultConfig,
+    onConfigChange: async (config) => {
+      const el = (id) => document.getElementById(id);
+      el('hero-headline').innerHTML = config.hero_headline || defaultConfig.hero_headline;
+      el('hero-sub').textContent = config.hero_subheadline || defaultConfig.hero_subheadline;
+      el('about-desc').textContent = config.about_text || defaultConfig.about_text;
+      el('final-cta-headline').innerHTML = config.final_cta_headline || defaultConfig.final_cta_headline;
+
+      const ctaText = config.cta_button_text || defaultConfig.cta_button_text;
+      el('cta-btn-text').textContent = ctaText;
+      lucide.createIcons();
+
+      const bg = config.background_color || defaultConfig.background_color;
+      const accent = config.accent_color || defaultConfig.accent_color;
+      const txt = config.text_color || defaultConfig.text_color;
+      document.body.style.backgroundColor = bg;
+      document.body.style.color = txt;
+
+      const ff = config.font_family || defaultConfig.font_family;
+      const fs = config.font_size || defaultConfig.font_size;
+      document.querySelectorAll('.font-outfit').forEach(e => e.style.fontFamily = `${ff}, Outfit, sans-serif`);
+      document.body.style.fontSize = fs + 'px';
+    },
+    mapToCapabilities: (config) => ({
+      recolorables: [
+        { get: () => config.background_color || defaultConfig.background_color, set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); }},
+        { get: () => config.surface_color || defaultConfig.surface_color, set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }},
+        { get: () => config.text_color || defaultConfig.text_color, set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); }},
+        { get: () => config.accent_color || defaultConfig.accent_color, set: (v) => { config.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); }},
+        { get: () => config.muted_color || defaultConfig.muted_color, set: (v) => { config.muted_color = v; window.elementSdk.setConfig({ muted_color: v }); }}
+      ],
+      borderables: [],
+      fontEditable: {
+        get: () => config.font_family || defaultConfig.font_family,
+        set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+      },
+      fontSizeable: {
+        get: () => config.font_size || defaultConfig.font_size,
+        set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+      }
+    }),
+    mapToEditPanelValues: (config) => new Map([
+      ['hero_headline', config.hero_headline || defaultConfig.hero_headline],
+      ['hero_subheadline', config.hero_subheadline || defaultConfig.hero_subheadline],
+      ['cta_button_text', config.cta_button_text || defaultConfig.cta_button_text],
+      ['about_text', config.about_text || defaultConfig.about_text],
+      ['final_cta_headline', config.final_cta_headline || defaultConfig.final_cta_headline]
+    ])
+  });
+})();
+
+// Form submission
+async function handleFormSubmit(event) {
+  event.preventDefault();
+  
+  const btn = document.getElementById('submit-btn');
+  const btnText = document.getElementById('btn-text');
+  
+  // Check data limit
+  if (currentLeadCount >= 999) {
+    alert('Maximum lead limit reached. Please contact support.');
+    return;
+  }
+  
+  // Show loading state
+  btn.disabled = true;
+  btnText.innerHTML = '<span class="spinner"></span> Sending...';
+  
+  const formData = {
+    name: document.getElementById('form-name').value,
+    email: document.getElementById('form-email').value,
+    phone: document.getElementById('form-phone').value,
+    service_type: document.getElementById('form-service').value,
+    message: document.getElementById('form-message').value || '',
+    submitted_at: new Date().toISOString()
+  };
+  
+  try {
+    const result = await window.dataSdk.create(formData);
+    
+    if (result.isOk) {
+      // Show success message
+      document.getElementById('contact-form').style.display = 'none';
+      document.getElementById('success-message').style.display = 'block';
+      lucide.createIcons();
+    } else {
+      btnText.innerHTML = '<i data-lucide="send" style="width:20px;height:20px;"></i> Try Again';
+      btn.disabled = false;
+      alert('Error submitting form. Please try again.');
+      lucide.createIcons();
+    }
+  } catch (error) {
+    btnText.innerHTML = '<i data-lucide="send" style="width:20px;height:20px;"></i> Send My Information';
+    btn.disabled = false;
+    alert('Error submitting form. Please try again.');
+    lucide.createIcons();
+  }
+}
+
+function resetForm() {
+  document.getElementById('contact-form').style.display = 'block';
+  document.getElementById('success-message').style.display = 'none';
+  document.getElementById('contact-form').reset();
+  const btn = document.getElementById('submit-btn');
+  const btnText = document.getElementById('btn-text');
+  btn.disabled = false;
+  btnText.innerHTML = '<i data-lucide="send" style="width:20px;height:20px;"></i> Send My Information';
+  lucide.createIcons();
+}
+
+// Tab switching
+function switchTab(tab) {
+  document.querySelectorAll('.results-tab').forEach(t => t.style.display = 'none');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).style.display = 'block';
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  document.querySelectorAll('#tab-' + tab + ' .animate-on-scroll').forEach(el => {
+    el.classList.remove('visible');
+    setTimeout(() => el.classList.add('visible'), 50);
+  });
+}
+
+// Mobile menu
+function closeMobile() {
+  document.getElementById('mobile-menu').classList.remove('open');
+}
+document.getElementById('mobile-toggle').addEventListener('click', () => {
+  document.getElementById('mobile-menu').classList.add('open');
+});
+document.getElementById('mobile-close').addEventListener('click', closeMobile);
+
+// Scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', (e) => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// Smooth scroll function for onclick handlers
+function smoothScroll(selector) {
+  const target = document.querySelector(selector);
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+// Init icons
+lucide.createIcons();
+
+
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e34a654c7a7659b',t:'MTc3NDY4MDA5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
